@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Application Name -->
+    <string name="app_name">Weather</string>
+
+    <!-- Settings Activity -->
+    <string name="city_name_preference_key">cityNamePreferenceKey</string>
+    <string name="city_name_preference_title">US City</string>
+    <string name="city_name_preference_default_summary">Enter a US city</string>
+
+    <string name="units_preference_key">unitsPreferenceKey</string>
+    <string name="units_preference_title">Units</string>
+    <string name="units_preference_summary">Fahrenheit</string>
+
+    <!-- CityNameDialogFragment -->
+    <string name="city_name_dialog_fragment_title">Enter US City.</string>
+    <string name="city_name_dialog_fragment_message">Please enter a US city to get the Weather.</string>
+
+    <!-- NoNetWorkDialogFragment -->
+    <string name="no_network_dialog_fragment_title">No Internet Connection</string>
+    <string name="no_network_dialog_fragment_message">Make sure Wi-Fi or cellular data is turned on, then try again.</string>
+
+    <!-- ResultTimeoutDialogFragment -->
+    <string name="result_timeout_dialog_fragment_title">Connection timeout</string>
+    <string name="result_timeout_dialog_fragment_message">There was an error during the connection to the server. Please try again.</string>
+
+    <!-- ResultErrorDialogFragment -->
+    <string name="result_error_dialog_fragment_title">City not found</string>
+    <string name="result_error_dialog_fragment_message">Please enter a valid US city.</string>
+
+
+</resources>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/currentWeatherRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:elevation="10dp"
+    tools:context="com.weather.app.MainFragmentActivity" >
+
+    <TextView
+        android:id="@+id/cityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:text="Location" />
+
+    <ImageView
+        android:id="@+id/skyConditionImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="75dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_01d"
+        android:contentDescription="null" />
+
+    <TextView
+        android:id="@+id/currentTemperatureTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/skyConditionImageView"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:textSize="50sp"
+        android:text="0°" />
+
+    <TextView
+        android:id="@+id/skyConditionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/currentTemperatureTextView"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:text="Clouds"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/skyConditionTextView"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/minimumTemperatureLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_alignRight="@+id/humidityLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Min:" />
+
+            <TextView
+                android:id="@+id/minimumTemperatureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/minimumTemperatureLabelTextView"
+                android:layout_toEndOf="@+id/minimumTemperatureLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="15°" />
+
+            <TextView
+                android:id="@+id/maximumTemperatureLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/minimumTemperatureLabelTextView"
+                android:layout_marginStart="20dp"
+                android:layout_alignRight="@+id/humidityLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Max:" />
+
+            <TextView
+                android:id="@+id/maximumTemperatureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/maximumTemperatureLabelTextView"
+                android:layout_toEndOf="@+id/maximumTemperatureLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="28°" />
+
+            <TextView
+                android:id="@+id/humidityLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/maximumTemperatureLabelTextView"
+                android:layout_marginStart="25dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Humidity:" />
+
+            <TextView
+                android:id="@+id/humidityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/humidityLabelTextView"
+                android:layout_toEndOf="@+id/humidityLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="100%" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/pressureLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Pressure:" />
+
+            <TextView
+                android:id="@+id/pressureTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/pressureLabelTextView"
+                android:layout_alignBaseline="@+id/pressureLabelTextView"
+                android:layout_toEndOf="@+id/pressureLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:text="1004 mmHg" />
+
+            <TextView
+                android:id="@+id/windSpeedLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pressureLabelTextView"
+                android:layout_alignEnd="@+id/pressureLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Wind:" />
+
+            <TextView
+                android:id="@+id/windSpeedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/windSpeedLabelTextView"
+                android:layout_toEndOf="@+id/windSpeedLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="75 m/h" />
+
+            <TextView
+                android:id="@+id/visibilityLabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/windSpeedLabelTextView"
+                android:layout_alignEnd="@+id/pressureLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="Visibility:" />
+
+            <TextView
+                android:id="@+id/visibilityTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_alignTop="@+id/visibilityLabelTextView"
+                android:layout_toEndOf="@+id/visibilityLabelTextView"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:text="16093 ft" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/cityTextView"
+        android:background="@drawable/selector_settings_button" />
+
+</RelativeLayout>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:id="@+id/cityNamePreference"
+        android:key="@string/city_name_preference_key"
+        android:title="@string/city_name_preference_title"
+        android:summary="@string/city_name_preference_default_summary" />
+
+    <ListPreference
+        android:id="@+id/unitsPreference"
+        android:key="@string/units_preference_key"
+        android:title="@string/units_preference_title"
+        android:summary="@string/units_preference_summary"
+        android:entries="@array/unitsEntries"
+        android:entryValues="@array/unitsEntryValues"
+        android:defaultValue="1"/>
+
+    <PreferenceCategory
+        android:title=" Weather App V1.0.0 - Application Challenge
+        \n
+        \n Jorge Gil
+        \n Phone: (248) 924-0874
+        \n Email: jorge.gil.gallegos@gmail.com" />
+
+</PreferenceScreen>
