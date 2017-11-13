@@ -9,6 +9,7 @@ import com.weather.R;
 import com.weather.app.api.WeatherAPIManager;
 import com.weather.app.api.WeatherAPIRobolectricTest;
 import com.weather.app.datamodels.CurrentWeatherDataModel;
+import com.weather.app.main.MainFragmentActivity;
 import com.weather.app.settings.SettingsPreferencesRobolectricTest;
 
 import org.hamcrest.CoreMatchers;
@@ -47,10 +48,10 @@ public class MainFragmentActivityRobolectricTest {
         weatherAPIRobolectricTest.setOnConnectionResultListener(new WeatherAPIRobolectricTestOnConnectionResultListener());
     }
 
-    @Test
     /**
      * This test checks the functionality of the application flow when the user inserts a city for the first time
      * */
+    @Test
     public void checkCityInsertedForTheFirstTimeTest() throws Exception {
 
         // Make the first city name insertion
@@ -58,10 +59,10 @@ public class MainFragmentActivityRobolectricTest {
         settingsPreferencesRobolectricTest.setSettingsPreferences_shouldSetCityName(cityString);
     }
 
-    @Test
     /**
-     *  This test checks the functionality of the application flow when the user inserts a city second time
+     *  This test checks the functionality of the application flow when the user inserts a city for second time
      *  */
+    @Test
     public void checkCityInsertedForSubsequentTimesTest() throws Exception {
 
         // Since this is a test without instruments, there is no a real storage. So to simulate a subsequent
@@ -74,10 +75,10 @@ public class MainFragmentActivityRobolectricTest {
         settingsPreferencesRobolectricTest.setSettingsPreferences_shouldSetCityName(cityString);
     }
 
-    @Test
     /**
      *  This test checks the functionality of the API call
      *  */
+    @Test
     public void checkAPICallTest() throws Exception {
 
         // Insert a city name
@@ -85,13 +86,13 @@ public class MainFragmentActivityRobolectricTest {
         weatherAPIRobolectricTest.callAPICall_shouldRetrieveCurrentWeatherInformation(cityString);
     }
 
-    @Test
     /**
      * This test checks the functionality of the application flow when the user inserts a city for the first time.
      *
      * First stores a city name in the SharedPreferences and then makes an API call to retrieve \
      * its current weather information
      * */
+    @Test
     public void performWalkthroughTest() throws Exception {
 
         // Make the second city name insertion
@@ -105,7 +106,7 @@ public class MainFragmentActivityRobolectricTest {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-            if (preference.getKey() == mainFragmentActivity.getString(R.string.city_name_preference_key)) {
+            if (preference.getKey().equals(mainFragmentActivity.getString(R.string.city_name_preference_key))) {
 
                 assertThat(preference, CoreMatchers.instanceOf(EditTextPreference.class));
 
@@ -117,7 +118,7 @@ public class MainFragmentActivityRobolectricTest {
                 // If the new Value is not empty, set it, else set the placeHolder
                 retrieveCurrentWeatherInformation(newCityNameString);
 
-            } else if (preference.getKey() == mainFragmentActivity.getString(R.string.units_preference_key)) {
+            } else if (preference.getKey().equals(mainFragmentActivity.getString(R.string.units_preference_key))) {
 
                 assertThat(preference, CoreMatchers.instanceOf(ListPreference.class));
 

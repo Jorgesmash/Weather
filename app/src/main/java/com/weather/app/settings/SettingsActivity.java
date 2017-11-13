@@ -49,7 +49,7 @@ public class SettingsActivity extends FragmentActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
 
-            if (preference.getKey() == getString(R.string.city_name_preference_key)) {
+            if (preference.getKey().equals(getString(R.string.city_name_preference_key))) {
 
                 // Convert newValue to String
                 String newCityNameString = newValue.toString();
@@ -57,7 +57,7 @@ public class SettingsActivity extends FragmentActivity {
                 // If the new Value is not empty, set it, else set the placeHolder
                 cityNamePreference.setSummary(!newCityNameString.equals("") ? newCityNameString : getString(R.string.city_name_preference_default_summary));
 
-            } else if (preference.getKey() == getString(R.string.units_preference_key)) {
+            } else if (preference.getKey().equals(getString(R.string.units_preference_key))) {
 
                 // Get the index of newValue in the array of values
                 int index = unitsPreference.findIndexOfValue(newValue.toString());
@@ -68,7 +68,6 @@ public class SettingsActivity extends FragmentActivity {
                 // Set the new summary with the selected entry
                 String newSummaryString = entries[index].toString();
                 unitsPreference.setSummary(newSummaryString);
-
             }
 
             return true;

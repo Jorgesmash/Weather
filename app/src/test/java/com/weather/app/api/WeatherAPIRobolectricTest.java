@@ -2,23 +2,12 @@ package com.weather.app.api;
 
 import android.app.Activity;
 
-import com.weather.BuildConfig;
-import com.weather.R;
-import com.weather.app.MainFragmentActivity;
 import com.weather.app.datamodels.CurrentWeatherDataModel;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 /**
  * Performs an non instrumented test of the MainFragmentActivity flow to retrieve the
  * current weather information.
  */
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class WeatherAPIRobolectricTest {
 
     private Activity activity;
@@ -46,7 +35,7 @@ public class WeatherAPIRobolectricTest {
 
         WeatherAPIManager weatherAPIManager = new WeatherAPIManager(activity);
         weatherAPIManager.setOnConnectionResultListener(new WeatherAPIManagerOnConnectionResultListener());
-        weatherAPIManager.connect(cityName);
+        weatherAPIManager.connectToWeatherEndpoint(cityName);
     }
 
     /** Listens if the API has finished retrieving the forecast information.

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/darker_gray"
     android:elevation="10dp"
-    tools:context="com.weather.app.MainFragmentActivity" >
+    tools:context="com.weather.app.main.MainFragmentActivity" >
 
     <TextView
         android:id="@+id/cityTextView"

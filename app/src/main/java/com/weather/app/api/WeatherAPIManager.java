@@ -6,13 +6,11 @@ import android.net.NetworkInfo;
 
 import com.weather.app.constants.Constants;
 import com.weather.app.datamodels.CurrentWeatherDataModel;
+import com.weather.app.util.TemperatureUnitsConverter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import static com.weather.app.util.TemperatureUnitsConverter.convertKelvinToCelsius;
-import static com.weather.app.util.TemperatureUnitsConverter.convertKelvinToFahrenheit;
 
 /**
  * Manages the connection to the forecast API.
@@ -30,6 +28,7 @@ public class WeatherAPIManager {
     public static final String RESULT_OK = WeatherAPIConnectionAsyncTask.RESPONSE_OK;
     public static final String RESULT_ERROR = WeatherAPIConnectionAsyncTask.RESPONSE_ERROR;
     public static final String RESULT_TIMEOUT = WeatherAPIConnectionAsyncTask.RESPONSE_TIMEOUT;
+    public static final String RESULT_NOTFOUND = WeatherAPIConnectionAsyncTask.RESPONSE_NOTFOUND;
 
     private Context context;
 
@@ -50,9 +49,27 @@ public class WeatherAPIManager {
         this.context = context;
     }
 
-    /** Connects to the Weather API to retrieve the weather information */
-    public void connect(String cityName) {
-        connectToWeatherEndpoint(cityName);
+    /**
+     * Weather connection endpoint:
+     *
+     * Calls the 'weather' endpoint which receives the city name entered by the user and
+     * sends the location info
+     *
+     * Example: http://api.openweathermap.org/data/2.5/weather?q=Westerville,OH,US&appid=c06f6494e5dcffdb0cd5ed54d03dbc24
+     */
+    public void connectToWeatherEndpoint(String cityName) {
+
+        if (isNetworkConnected()) {
+
+            String endpointName = Constants.WEATHER_ENDPOINT_NAME;
+
+            String endpointURL = Constants.BASE_URL + Constants.WEATHER_ENDPOINT_NAME + "?" + "q=" + cityName + "," + "US" + "&" + "appid=" + Constants.WEATHER_API_KEY;
+
+            executeAPIConnectionAsyncTask(endpointName, endpointURL);
+
+        } else {
+            onConnectionResultListener.onConnectionResult(NETWORK_ERROR, null);
+        }
     }
 
     /**
@@ -84,55 +101,24 @@ public class WeatherAPIManager {
     }
 
     /**
-     * First connection endpoint:
-     *
-     * Calls the 'weather' endpoint which receives the city name entered by the user and
-     * sends the location info
-     *
-     * Example: http://api.openweathermap.org/data/2.5/weather?q=Westerville,OH,US&appid=c06f6494e5dcffdb0cd5ed54d03dbc24
-     */
-    private void connectToWeatherEndpoint(String cityName) {
-
-        if (isNetworkConnected()) {
-
-            String endpointName = Constants.WEATHER_ENDPOINT_NAME;
-
-            String endpointURL = Constants.BASE_URL + Constants.WEATHER_ENDPOINT_NAME + "?" + "q=" + cityName + "," + "US" + "&" + "appid=" + Constants.WEATHER_API_KEY;
-
-            executeAPIConnectionAsyncTask(endpointName, endpointURL);
-
-        } else {
-            onConnectionResultListener.onConnectionResult(NETWORK_ERROR, null);
-        }
-    }
-
-    /**
      *  Receives the result of the asynchronous task to the API.
      *
      *  Connect to an endpoint which receives the city name and sends a response with the
      *  information for the current weather.
-     *
-     *  Second, connect to an endpoint which receives the city and state and sends a response with
-     *  the forecast information for the next 10 days, but we'll take only 7 days.
      *  */
     private class WeatherAPIConnectionAsyncTaskOnResponseListener implements WeatherAPIConnectionAsyncTask.OnResponseListener {
 
         @Override
         public void onResponse(String endpointName, String status, String result) {
 
-            if (status.equals(RESULT_ERROR) || status.equals(RESULT_TIMEOUT)) {
+            if (status.equals(RESULT_OK)) {
+                processWeatherEndpointResult(result);
+
+                onConnectionResultListener.onConnectionResult(status, currentWeatherDataModel);
+
+            } else {
 
                 onConnectionResultListener.onConnectionResult(status, null);
-
-            } else if (status.equals(RESULT_OK)) {
-
-                if (endpointName.equals(Constants.WEATHER_ENDPOINT_NAME)) { // First connection
-
-                    processWeatherEndpointResult(result);
-
-                    onConnectionResultListener.onConnectionResult(status, currentWeatherDataModel); // testing
-
-                }
             }
         }
     }
@@ -160,11 +146,11 @@ public class WeatherAPIManager {
             String currentTemperatureKelvinString = mainJSONObject.getString("temp");
             int currentTemperatureKelvin = (int) Double.parseDouble(currentTemperatureKelvinString);
             // Convert the current temperature from Kelvin to Celsius and set it in currentWeatherDataModel
-            int currentTemperatureFahrenheit = convertKelvinToFahrenheit(currentTemperatureKelvin);
+            int currentTemperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(currentTemperatureKelvin);
             String currentTemperatureFahrenheitString = Integer.toString(currentTemperatureFahrenheit);
             currentWeatherDataModel.setCurrentTemperatureFahrenheitString(currentTemperatureFahrenheitString);
             // Convert the current temperature from Kelvin to Fahrenheit and set it in currentWeatherDataModel
-            int currentTemperatureCelsius = convertKelvinToCelsius(currentTemperatureKelvin);
+            int currentTemperatureCelsius = TemperatureUnitsConverter.convertKelvinToCelsius(currentTemperatureKelvin);
             String currentTemperatureCelsiusString = Integer.toString(currentTemperatureCelsius);
             currentWeatherDataModel.setCurrentTemperatureCelsiusString(currentTemperatureCelsiusString);
 
@@ -185,11 +171,11 @@ public class WeatherAPIManager {
             String minimumTemperatureKelvinString = mainJSONObject.getString("temp_min");
             int minimumTemperatureKelvin = (int) Double.parseDouble(minimumTemperatureKelvinString);
             // Convert the minimum temperature from Kelvin to Fahrenheit and set it in currentWeatherDataModel
-            int minimumTemperatureFahrenheit = convertKelvinToFahrenheit(minimumTemperatureKelvin);
+            int minimumTemperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(minimumTemperatureKelvin);
             String minimumTemperatureFahrenheitString = Integer.toString(minimumTemperatureFahrenheit);
             currentWeatherDataModel.setMinimumTemperatureFahrenheitString(minimumTemperatureFahrenheitString);
             // Convert the minimum temperature from Kelvin to Celsius and set it in currentWeatherDataModel
-            int minimumTemperatureCelsius = convertKelvinToCelsius(minimumTemperatureKelvin);
+            int minimumTemperatureCelsius = TemperatureUnitsConverter.convertKelvinToCelsius(minimumTemperatureKelvin);
             String minimumTemperatureCelsiusString = Integer.toString(minimumTemperatureCelsius);
             currentWeatherDataModel.setMinimumTemperatureCelsiusString(minimumTemperatureCelsiusString);
 
@@ -197,11 +183,11 @@ public class WeatherAPIManager {
             String maximumTemperatureKelvinString = mainJSONObject.getString("temp_max");
             int maximumTemperatureKelvin = (int) Double.parseDouble(maximumTemperatureKelvinString);
             // Convert the maximum temperature from Kelvin to Fahrenheit and set it in currentWeatherDataModel
-            int maximumTemperatureFahrenheit = convertKelvinToFahrenheit(maximumTemperatureKelvin);
+            int maximumTemperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(maximumTemperatureKelvin);
             String maximumTemperatureFahrenheitString = Integer.toString(maximumTemperatureFahrenheit);
             currentWeatherDataModel.setMaximumTemperatureFahrenheitString(maximumTemperatureFahrenheitString);
             // Convert the maximum temperature from Kelvin to Celsius and set it in currentWeatherDataModel
-            int maximumTemperatureCelsius = convertKelvinToCelsius(maximumTemperatureKelvin);
+            int maximumTemperatureCelsius = TemperatureUnitsConverter.convertKelvinToCelsius(maximumTemperatureKelvin);
             String maximumTemperatureCelsiusString = Integer.toString(maximumTemperatureCelsius);
             currentWeatherDataModel.setMaximumTemperatureCelsiusString(maximumTemperatureCelsiusString);
 

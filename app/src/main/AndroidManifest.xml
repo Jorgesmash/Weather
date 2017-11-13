@@ -11,7 +11,7 @@
         android:allowBackup="true"
         android:supportsRtl="true" >
 
-        <activity android:name="com.weather.app.MainFragmentActivity" android:screenOrientation="portrait" android:theme="@style/AppTheme" >
+        <activity android:name="com.weather.app.main.MainFragmentActivity" android:screenOrientation="portrait" android:theme="@style/AppTheme" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

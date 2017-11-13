@@ -10,7 +10,10 @@ import android.os.Bundle;
 import com.weather.R;
 
 /**
- * Shows a customizable dialog to user
+ * Shows dialog to user.
+ *
+ * This DialogFragment is customizable, being possible to set a Title, a Message and a
+ * Positive Button.
  * */
 public class ApplicationDialogFragment extends DialogFragment {
 
@@ -19,7 +22,7 @@ public class ApplicationDialogFragment extends DialogFragment {
 
     private DialogInterface.OnClickListener positiveButtonOnClickListener;
 
-    public static ApplicationDialogFragment newInstance(Context context) {
+    public static ApplicationDialogFragment newInstance() {
         return new ApplicationDialogFragment();
     }
 

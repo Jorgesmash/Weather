@@ -1,4 +1,4 @@
-package com.weather.app;
+package com.weather.app.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,9 +66,8 @@ public class MainFragmentActivity extends FragmentActivity {
         // Create a singleton instance for SettingsPreferencesManager
         SettingsPreferencesManager.newInstance(this);
 
-        /** Get the components of the content layout */
+        /* Get the components of the content layout */
 
-        // Current weather section
         currentWeatherRelativeLayout = findViewById(R.id.currentWeatherRelativeLayout);
 
         cityTextView = findViewById(R.id.cityTextView);
@@ -118,31 +117,17 @@ public class MainFragmentActivity extends FragmentActivity {
         String cityName = SettingsPreferencesManager.getCityName();
         if (cityName.equals("")) {
 
-            currentWeatherRelativeLayout.setBackgroundColor(this.getResources().getColor(android.R.color.darker_gray, null));
-            cityTextView.setVisibility(View.INVISIBLE);
-            skyConditionImageView.setVisibility(View.INVISIBLE);
-            currentTemperatureTextView.setVisibility(View.INVISIBLE);
-            skyConditionTextView.setVisibility(View.INVISIBLE);
-            minimumTemperatureLabelTextView.setVisibility(View.INVISIBLE);
-            minimumTemperatureTextView.setVisibility(View.INVISIBLE);
-            maximumTemperatureLabelTextView.setVisibility(View.INVISIBLE);
-            maximumTemperatureTextView.setVisibility(View.INVISIBLE);
-            humidityLabelTextView.setVisibility(View.INVISIBLE);
-            humidityTextView.setVisibility(View.INVISIBLE);
-            pressureLabelTextView.setVisibility(View.INVISIBLE);
-            pressureTextView.setVisibility(View.INVISIBLE);
-            windSpeedLabelTextView.setVisibility(View.INVISIBLE);
-            windSpeedTextView.setVisibility(View.INVISIBLE);
-            visibilityLabelTextView.setVisibility(View.INVISIBLE);
-            visibilityTextView.setVisibility(View.INVISIBLE);
+            // Make UI elements invisible
+            setUIElementsVisible(View.INVISIBLE);
 
-            showDialogFragment(this.getString(R.string.city_name_dialog_fragment_title), this.getString(R.string.city_name_dialog_fragment_message), new NoCityNameDialogFragmentPositiveButtonOnClickListener());
+            showDialogFragment(this.getString(R.string.city_name_dialog_fragment_title), this.getString(R.string.city_name_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
+
             return;
         }
 
         WeatherAPIManager weatherAPIManager = new WeatherAPIManager(this);
         weatherAPIManager.setOnConnectionResultListener(new WeatherAPIManagerOnConnectionResultListener());
-        weatherAPIManager.connect(cityName);
+        weatherAPIManager.connectToWeatherEndpoint(cityName);
     }
 
     /** Listens if the API has finished retrieving the forecast informations.
@@ -155,19 +140,19 @@ public class MainFragmentActivity extends FragmentActivity {
         public void onConnectionResult(String status, CurrentWeatherDataModel currentWeatherDataModel) {
 
             if (status.equals(WeatherAPIManager.NETWORK_ERROR)) {
-                showDialogFragment(getString(R.string.no_network_dialog_fragment_title), getString(R.string.no_network_dialog_fragment_message), new NoNetworkDialogFragmentPositiveButtonOnClickListener());
+                showDialogFragment(getString(R.string.no_network_dialog_fragment_title), getString(R.string.no_network_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
             }  else if (status.equals(WeatherAPIManager.RESULT_TIMEOUT)) {
-
-                showDialogFragment(getString(R.string.result_timeout_dialog_fragment_title), getString(R.string.result_timeout_dialog_fragment_message), new ResultTimeoutDialogFragmentPositiveButtonOnClickListener());
+                showDialogFragment(getString(R.string.result_timeout_dialog_fragment_title), getString(R.string.result_timeout_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
             } else if (status.equals(WeatherAPIManager.RESULT_ERROR)) {
+                showDialogFragment(getString(R.string.result_error_dialog_fragment_title), getString(R.string.result_error_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
 
-                showDialogFragment(getString(R.string.result_error_dialog_fragment_title), getString(R.string.result_error_dialog_fragment_message), new ResultErrorDialogFragmentPositiveButtonOnClickListener());
+            } else if (status.equals(WeatherAPIManager.RESULT_NOTFOUND)) {
+                showDialogFragment(getString(R.string.result_notfound_dialog_fragment_title), getString(R.string.result_notfound_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
 
             } else if (status.equals(WeatherAPIManager.RESULT_OK)) {
-
-                populateCurrentWeatherView(currentWeatherDataModel);
+                    populateCurrentWeatherView(currentWeatherDataModel);
             }
         }
     }
@@ -179,24 +164,21 @@ public class MainFragmentActivity extends FragmentActivity {
      * */
     private void populateCurrentWeatherView(CurrentWeatherDataModel currentWeatherDataModel) {
 
-        cityTextView.setVisibility(View.VISIBLE);
-        skyConditionImageView.setVisibility(View.VISIBLE);
-        currentTemperatureTextView.setVisibility(View.VISIBLE);
-        skyConditionTextView.setVisibility(View.VISIBLE);
-        minimumTemperatureLabelTextView.setVisibility(View.VISIBLE);
-        minimumTemperatureTextView.setVisibility(View.VISIBLE);
-        maximumTemperatureLabelTextView.setVisibility(View.VISIBLE);
-        maximumTemperatureTextView.setVisibility(View.VISIBLE);
-        humidityLabelTextView.setVisibility(View.VISIBLE);
-        humidityTextView.setVisibility(View.VISIBLE);
-        pressureLabelTextView.setVisibility(View.VISIBLE);
-        pressureTextView.setVisibility(View.VISIBLE);
-        windSpeedLabelTextView.setVisibility(View.VISIBLE);
-        windSpeedTextView.setVisibility(View.VISIBLE);
-        visibilityLabelTextView.setVisibility(View.VISIBLE);
-        visibilityTextView.setVisibility(View.VISIBLE);
+        // Make UI elements visible
+        setUIElementsVisible(View.VISIBLE);
 
-        // Populate location with city and state
+        // Select background color depending of the current temperature. If the temperature is below
+        // 60 °F, the application background will be blue (cold), otherwise will be orange (orange)
+        int color;
+        int temperature = (int) Double.parseDouble(currentWeatherDataModel.getCurrentTemperatureFahrenheitString());
+        if (temperature < 60) {
+            color = R.color.coolWeatherColor;
+        } else {
+            color = R.color.warmWeatherColor;
+        }
+        currentWeatherRelativeLayout.setBackgroundColor(this.getColor(color));
+
+        // Populate location with city
         String cityString = currentWeatherDataModel.getCityString();
         cityTextView.setText(cityString);
 
@@ -220,17 +202,6 @@ public class MainFragmentActivity extends FragmentActivity {
         minimumTemperatureTextView.setText(minimumTemperatureString);
         maximumTemperatureTextView.setText(maximumTemperatureString);
 
-        // Select background color depending of the current temperature. If the temperature is below
-        // 60 °F, the application background will be blue (cold), otherwise will be orange (orange)
-        int color;
-        int temperature = (int) Double.parseDouble(currentWeatherDataModel.getCurrentTemperatureFahrenheitString());
-        if (temperature < 60) {
-            color = R.color.coolWeatherColor;
-        } else {
-            color = R.color.warmWeatherColor;
-        }
-        currentWeatherRelativeLayout.setBackgroundColor(getColor(color));
-
         // Populate sky conditions label
         String skyConditionsString = currentWeatherDataModel.getSkyConditionsDescriptionString();
         skyConditionTextView.setText(skyConditionsString);
@@ -253,6 +224,43 @@ public class MainFragmentActivity extends FragmentActivity {
     }
 
     /**
+     * Shows a multi purpose DialogFragment.
+     */
+    private void showDialogFragment(String title, String message, DialogInterface.OnClickListener onClickListener) {
+
+        ApplicationDialogFragment applicationDialogFragment = ApplicationDialogFragment.newInstance();
+        applicationDialogFragment.setTitle(title);
+        applicationDialogFragment.setMessage(message);
+        applicationDialogFragment.setCancelable(false);
+        applicationDialogFragment.setPositiveButtonOnClickListener(onClickListener);
+        applicationDialogFragment.show(getFragmentManager(), "applicationDialogFragment");
+    }
+
+    /**
+     * Called when user presses the OK button of a DialogFragment where user will try to enter a valid city again.
+     * It will open the settings activity, so the user can enter a city name.
+     * */
+    private class RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            startSettingsActivity();
+        }
+    }
+
+    /**
+     * Called when user presses the OK button of a DialogFragment where user will try to enter a valid city again.
+     * It will try to connect again.
+     * */
+    private class RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            retrieveForecastInformation();
+        }
+    }
+
+    /**
      * Called when the user presses the Settings button.
      * It will open the settings activity
      * */
@@ -265,72 +273,38 @@ public class MainFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * Shows a multi purpose DialogFragment.
-     */
-    private void showDialogFragment(String title, String message, DialogInterface.OnClickListener onClickListener) {
-
-        ApplicationDialogFragment applicationDialogFragment = ApplicationDialogFragment.newInstance(this);
-        applicationDialogFragment.setTitle(title);
-        applicationDialogFragment.setMessage(message);
-        applicationDialogFragment.setCancelable(false);
-        applicationDialogFragment.setPositiveButtonOnClickListener(onClickListener);
-        applicationDialogFragment.show(getFragmentManager(), "applicationDialogFragment");
-    }
-
-    /**
-     * Called when user presses the OK button of NoCityNameDialogFragment
-     * It will open the settings activity, so the user can enter a city name
-     * */
-    private class NoCityNameDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            startSettingsActivity();
-        }
-    }
-
-    /**
-     * Called when user presses the OK button in the NoNetworkDialogFragment.
-     * It will try to connect again
-     * */
-    private class NoNetworkDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            retrieveForecastInformation();
-        }
-    }
-
-    /**
-     * Called when user presses the OK button in the ResultTimeoutDialogFragment.
-     * It will try to connect again
-     * */
-    private class ResultTimeoutDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            retrieveForecastInformation();
-        }
-    }
-
-    /**
-     * Called when user presses the OK button in the ResultErrorDialogFragment.
-     * It will show the SettingsActivity
-     * */
-    private class ResultErrorDialogFragmentPositiveButtonOnClickListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            startSettingsActivity();
-        }
-    }
-
-    /**
      * Start the Settings Activity
      * */
     private void startSettingsActivity() {
 
         Intent intent = new Intent(MainFragmentActivity.this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Sets the visibility of the view's UI elements
+     * */
+    private void setUIElementsVisible(int visibility) {
+
+        cityTextView.setVisibility(visibility);
+        skyConditionImageView.setVisibility(visibility);
+        currentTemperatureTextView.setVisibility(visibility);
+        skyConditionTextView.setVisibility(visibility);
+        minimumTemperatureLabelTextView.setVisibility(visibility);
+        minimumTemperatureTextView.setVisibility(visibility);
+        maximumTemperatureLabelTextView.setVisibility(visibility);
+        maximumTemperatureTextView.setVisibility(visibility);
+        humidityLabelTextView.setVisibility(visibility);
+        humidityTextView.setVisibility(visibility);
+        pressureLabelTextView.setVisibility(visibility);
+        pressureTextView.setVisibility(visibility);
+        windSpeedLabelTextView.setVisibility(visibility);
+        windSpeedTextView.setVisibility(visibility);
+        visibilityLabelTextView.setVisibility(visibility);
+        visibilityTextView.setVisibility(visibility);
+
+        if (visibility == View.INVISIBLE) {
+            currentWeatherRelativeLayout.setBackgroundColor(this.getResources().getColor(android.R.color.darker_gray, null));
+        }
     }
 }

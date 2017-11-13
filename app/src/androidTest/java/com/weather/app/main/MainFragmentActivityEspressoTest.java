@@ -1,4 +1,4 @@
-package com.weather.app;
+package com.weather.app.main;
 
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;

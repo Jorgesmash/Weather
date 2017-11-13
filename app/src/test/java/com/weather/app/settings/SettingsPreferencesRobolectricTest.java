@@ -8,24 +8,16 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.widget.Button;
 
-import com.weather.BuildConfig;
 import com.weather.R;
-import com.weather.app.MainFragmentActivity;
 import com.weather.app.dialog.ApplicationDialogFragment;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowApplication;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class SettingsPreferencesRobolectricTest {
 
     private Activity activity;
@@ -57,7 +49,7 @@ public class SettingsPreferencesRobolectricTest {
         // If the city name will be set for the first time, a dialog is shown asking user for inserting a city
         if (cityName.equals("")) {
 
-            // Check that applicationDialogFragment has been opened after clicking addFloatingButton
+            // Check that applicationDialogFragment has been opened
             ApplicationDialogFragment applicationDialogFragment = (ApplicationDialogFragment) activity.getFragmentManager().findFragmentByTag("applicationDialogFragment");
             assertNotNull(applicationDialogFragment.getDialog());
 

@@ -9,7 +9,7 @@ import com.weather.R;
 /**
  * Singleton class to manage the access to the user's preferences.
  *
- * Controls the access to the user's preferences and makes them available along all the application
+ * Controls the access to the user's preferences and makes them available along all the application.
  * */
 public class SettingsPreferencesManager {
 

@@ -3,7 +3,7 @@
 
     <!-- Arrays for SettingsPreferencesFragment -->
     <string-array name="unitsEntries" >
-        <item>Farenheit</item>
+        <item>Fahrenheit</item>
         <item>Celsius</item>
     </string-array>
 

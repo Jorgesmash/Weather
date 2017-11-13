@@ -1,13 +1,11 @@
-package com.weather.app.api;
-
-import com.weather.app.util.TemperatureUnitsConverter;
-
-import junit.framework.Assert;
+package com.weather.app.util;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class WeatherAPIJUnitTest {
+import static junit.framework.Assert.assertEquals;
+
+public class TemperatureUnitsConverterJunitTest {
 
     @Before
     public void setUp() throws Exception {
@@ -23,7 +21,7 @@ public class WeatherAPIJUnitTest {
         double temperatureKelvin = 277.3;
         double temperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(temperatureKelvin);
 
-        Assert.assertEquals(39, (int) temperatureFahrenheit);
+        assertEquals(39, (int) temperatureFahrenheit);
     }
 
     /**
@@ -35,7 +33,7 @@ public class WeatherAPIJUnitTest {
         double temperatureKelvin = 0;
         double temperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(temperatureKelvin);
 
-        Assert.assertEquals(-459, (int) temperatureFahrenheit);
+        assertEquals(-459, (int) temperatureFahrenheit);
     }
 
     /**
@@ -47,7 +45,7 @@ public class WeatherAPIJUnitTest {
         double temperatureKelvin = -16;
         double temperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToFahrenheit(temperatureKelvin);
 
-        Assert.assertEquals(-488, (int) temperatureFahrenheit);
+        assertEquals(-488, (int) temperatureFahrenheit);
     }
 
 
@@ -60,7 +58,7 @@ public class WeatherAPIJUnitTest {
         double temperatureKelvin = 288.54;
         double temperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToCelsius(temperatureKelvin);
 
-        Assert.assertEquals(15, (int) temperatureFahrenheit);
+        assertEquals(15, (int) temperatureFahrenheit);
     }
 
     /**
@@ -72,6 +70,6 @@ public class WeatherAPIJUnitTest {
         double temperatureKelvin = 250.85;
         double temperatureFahrenheit = TemperatureUnitsConverter.convertKelvinToCelsius(temperatureKelvin);
 
-        Assert.assertEquals(-22, (int) temperatureFahrenheit);
+        assertEquals(-22, (int) temperatureFahrenheit);
     }
 }

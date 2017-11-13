@@ -32,6 +32,7 @@ public class TemperatureUnitsConverter {
      * */
     public static int convertKelvinToCelsius(double temperatureKelvin) {
 
+        // Convert from Kelvin to Celsius
         int temperatureCelsius = (int) (temperatureKelvin - 273.15f);
 
         return temperatureCelsius;

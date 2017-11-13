@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -17,9 +18,6 @@ import java.net.URL;
  *
  *  Connect to an endpoint which receives the city name and sends a response with the
  *  information for the current weather.
- *
- *  Second, connect to an endpoint which receives the city and state and sends a response with
- *  the forecast information for the next 10 days, but we'll take only 7 days.
  *  */
 public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -35,6 +33,7 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
     public static final String RESPONSE_OK = "RESPONSE_OK";
     public static final String RESPONSE_ERROR = "RESPONSE_ERROR";
     public static final String RESPONSE_TIMEOUT = "RESPONSE_TIMEOUT";
+    public static final String RESPONSE_NOTFOUND = "RESPONSE_NOTFOUND";
 
     /** Listener to let know when a response has been received */
     private OnResponseListener onResponseListener;
@@ -89,6 +88,9 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
             // Set the result
             result = stringBuilder.toString();
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            result = RESPONSE_NOTFOUND;
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -104,9 +106,11 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
 
         // If result is null, return TIMEOUT error status
         if (result == null) {
+            this.onResponseListener.onResponse(endpointNameString, RESPONSE_TIMEOUT, null);
+            return;
 
-            this.onResponseListener.onResponse(endpointNameString, RESPONSE_TIMEOUT, result);
-
+        } else if (result.equals(RESPONSE_NOTFOUND)) {
+            this.onResponseListener.onResponse(endpointNameString, RESPONSE_NOTFOUND, null);
             return;
         }
 
