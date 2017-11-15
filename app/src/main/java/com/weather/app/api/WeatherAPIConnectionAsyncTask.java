@@ -120,7 +120,6 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
             String codeString = resultJSONObject.getString("cod");
 
             if (!codeString.equals("200")) {
-
                 this.onResponseListener.onResponse(endpointNameString, RESPONSE_ERROR, result);
 
                 return;

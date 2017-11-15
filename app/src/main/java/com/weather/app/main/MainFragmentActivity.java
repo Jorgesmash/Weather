@@ -152,7 +152,7 @@ public class MainFragmentActivity extends FragmentActivity {
                 showDialogFragment(getString(R.string.result_notfound_dialog_fragment_title), getString(R.string.result_notfound_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
 
             } else if (status.equals(WeatherAPIManager.RESULT_OK)) {
-                    populateCurrentWeatherView(currentWeatherDataModel);
+                populateCurrentWeatherView(currentWeatherDataModel);
             }
         }
     }

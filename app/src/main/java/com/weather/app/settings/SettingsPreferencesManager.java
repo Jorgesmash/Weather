@@ -33,7 +33,7 @@ public class SettingsPreferencesManager {
     }
 
     /**
-     * Returns the last city name entered by the user, or null if user has not entered a city name
+     * Returns the last city name entered by the user, or null if user has not entered a city name.
      */
     public static String getCityName() {
         return sharedPreferences.getString(context.getString(R.string.city_name_preference_key), "");
@@ -41,7 +41,7 @@ public class SettingsPreferencesManager {
 
     /**
      * Returns the temperature units code preferred by the user,
-     * or Fahrenheit as default if user has not entered preferred units
+     * or Fahrenheit as default if user has not entered preferred units.
      */
     public static String getTemperatureUnits() {
 
