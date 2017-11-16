@@ -2,15 +2,11 @@ package com.weather.app.api;
 
 import android.os.AsyncTask;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -29,19 +25,18 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
     private static final int READ_TIMEOUT = 15000;
     private static final int CONNECTION_TIMEOUT = 15000;
 
-    // Response status
-    public static final String RESPONSE_OK = "RESPONSE_OK";
-    public static final String RESPONSE_ERROR = "RESPONSE_ERROR";
-    public static final String RESPONSE_TIMEOUT = "RESPONSE_TIMEOUT";
-    public static final String RESPONSE_NOTFOUND = "RESPONSE_NOTFOUND";
+    // Network status
+    public static final String NETWORK_OK = "NETWORK_OK";
+    public static final String NETWORK_TIMEOUT = "NETWORK_TIMEOUT";
+    public static final String NETWORK_NOTFOUND = "NETWORK_NOTFOUND";
 
     /** Listener to let know when a response has been received */
-    private OnResponseListener onResponseListener;
-    public interface OnResponseListener {
-        void onResponse(String endpointName, String status, String result);
+    private OnConnectionResultListener onConnectionResultListener;
+    public interface OnConnectionResultListener {
+        void onConnectionResult(String endpointName, String status, String result);
     }
-    public void setOnResponseListener(OnResponseListener onResponseListener) {
-        this.onResponseListener = onResponseListener;
+    public void setOnConnectionResultListener(OnConnectionResultListener onConnectionResultListener) {
+        this.onConnectionResultListener = onConnectionResultListener;
     }
 
     @Override
@@ -90,9 +85,7 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            result = RESPONSE_NOTFOUND;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            result = NETWORK_NOTFOUND;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,31 +97,17 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        // If result is null, return TIMEOUT error status
+        // If result is null, return TIMEOUT network status
         if (result == null) {
-            this.onResponseListener.onResponse(endpointNameString, RESPONSE_TIMEOUT, null);
+            this.onConnectionResultListener.onConnectionResult(endpointNameString, NETWORK_TIMEOUT, null);
             return;
 
-        } else if (result.equals(RESPONSE_NOTFOUND)) {
-            this.onResponseListener.onResponse(endpointNameString, RESPONSE_NOTFOUND, null);
+        } else if (result.equals(NETWORK_NOTFOUND)) {
+            this.onConnectionResultListener.onConnectionResult(endpointNameString, NETWORK_NOTFOUND, null);
             return;
         }
 
-        // If result is not successful (200), return ERROR status
-        try {
-            JSONObject resultJSONObject = new JSONObject(result);
-            String codeString = resultJSONObject.getString("cod");
-
-            if (!codeString.equals("200")) {
-                this.onResponseListener.onResponse(endpointNameString, RESPONSE_ERROR, result);
-
-                return;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // Otherwise return OK status
-        this.onResponseListener.onResponse(endpointNameString, RESPONSE_OK, result);
+        // Otherwise return OK network status
+        this.onConnectionResultListener.onConnectionResult(endpointNameString, NETWORK_OK, result);
     }
 }

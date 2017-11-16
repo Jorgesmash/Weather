@@ -108,7 +108,7 @@ public class MainFragmentActivity extends FragmentActivity {
 
     /**
      * Checks if user has already typed a city name and if true, creates a new API connection
-     * to retrieve the current weather information for the next 7 days. Also sets an OnConnectionResultListener
+     * to retrieve the current weather information for the next 7 days. Also sets an OnResponseListener
      * which will be called when the result of the API connection has finished retrieving
      * the weather information
      * */
@@ -126,7 +126,7 @@ public class MainFragmentActivity extends FragmentActivity {
         }
 
         WeatherAPIManager weatherAPIManager = new WeatherAPIManager(this);
-        weatherAPIManager.setOnConnectionResultListener(new WeatherAPIManagerOnConnectionResultListener());
+        weatherAPIManager.setOnResponseListener(new WeatherAPIManagerOnResponseListener());
         weatherAPIManager.connectToWeatherEndpoint(cityName);
     }
 
@@ -134,24 +134,21 @@ public class MainFragmentActivity extends FragmentActivity {
      * If there any error, this will be reported to user in a Dialog.
      * If a successful result is received, we'll populate both current weather a forecast sections
      * */
-    private class WeatherAPIManagerOnConnectionResultListener implements WeatherAPIManager.OnConnectionResultListener {
+    private class WeatherAPIManagerOnResponseListener implements WeatherAPIManager.OnResponseListener {
 
         @Override
-        public void onConnectionResult(String status, CurrentWeatherDataModel currentWeatherDataModel) {
+        public void onResponse(String status, CurrentWeatherDataModel currentWeatherDataModel) {
 
             if (status.equals(WeatherAPIManager.NETWORK_ERROR)) {
                 showDialogFragment(getString(R.string.no_network_dialog_fragment_title), getString(R.string.no_network_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
-            }  else if (status.equals(WeatherAPIManager.RESULT_TIMEOUT)) {
+            }  else if (status.equals(WeatherAPIManager.RESPONSE_TIMEOUT)) {
                 showDialogFragment(getString(R.string.result_timeout_dialog_fragment_title), getString(R.string.result_timeout_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
-            } else if (status.equals(WeatherAPIManager.RESULT_ERROR)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_NOTFOUND)) {
                 showDialogFragment(getString(R.string.result_error_dialog_fragment_title), getString(R.string.result_error_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
 
-            } else if (status.equals(WeatherAPIManager.RESULT_NOTFOUND)) {
-                showDialogFragment(getString(R.string.result_notfound_dialog_fragment_title), getString(R.string.result_notfound_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
-
-            } else if (status.equals(WeatherAPIManager.RESULT_OK)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_OK)) {
                 populateCurrentWeatherView(currentWeatherDataModel);
             }
         }

@@ -25,10 +25,6 @@
     <string name="result_timeout_dialog_fragment_message">There was an error during the connection to the server. Please try again.</string>
 
     <!-- ResultNotFoundDialogFragment -->
-    <string name="result_notfound_dialog_fragment_title">Not Found</string>
-    <string name="result_notfound_dialog_fragment_message">The city you entered was not found. Please try again.</string>
-
-    <!-- ResultErrorDialogFragment -->
     <string name="result_error_dialog_fragment_title">City not found</string>
     <string name="result_error_dialog_fragment_message">Please enter a valid US city.</string>
 

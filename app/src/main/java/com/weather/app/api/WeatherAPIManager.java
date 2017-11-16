@@ -25,10 +25,9 @@ public class WeatherAPIManager {
     public static final String NETWORK_ERROR = "NETWORK_ERROR";
 
     // Response status
-    public static final String RESULT_OK = WeatherAPIConnectionAsyncTask.RESPONSE_OK;
-    public static final String RESULT_ERROR = WeatherAPIConnectionAsyncTask.RESPONSE_ERROR;
-    public static final String RESULT_TIMEOUT = WeatherAPIConnectionAsyncTask.RESPONSE_TIMEOUT;
-    public static final String RESULT_NOTFOUND = WeatherAPIConnectionAsyncTask.RESPONSE_NOTFOUND;
+    public static final String RESPONSE_OK = WeatherAPIConnectionAsyncTask.NETWORK_OK;
+    public static final String RESPONSE_TIMEOUT = WeatherAPIConnectionAsyncTask.NETWORK_TIMEOUT;
+    public static final String RESPONSE_NOTFOUND = WeatherAPIConnectionAsyncTask.NETWORK_NOTFOUND;
 
     private Context context;
 
@@ -36,12 +35,12 @@ public class WeatherAPIManager {
     private CurrentWeatherDataModel currentWeatherDataModel;
 
     /**  Listener to inform that a result from the API connection has been gotten */
-    private OnConnectionResultListener onConnectionResultListener;
-    public interface OnConnectionResultListener {
-        void onConnectionResult(String status, CurrentWeatherDataModel currentWeatherDataModel);
+    private OnResponseListener onResponseListener;
+    public interface OnResponseListener {
+        void onResponse(String status, CurrentWeatherDataModel currentWeatherDataModel);
     }
-    public void setOnConnectionResultListener(OnConnectionResultListener onConnectionResultListener) {
-        this.onConnectionResultListener = onConnectionResultListener;
+    public void setOnResponseListener(OnResponseListener onResponseListener) {
+        this.onResponseListener = onResponseListener;
     }
 
     /** Constructor */
@@ -68,7 +67,7 @@ public class WeatherAPIManager {
             executeAPIConnectionAsyncTask(endpointName, endpointURL);
 
         } else {
-            onConnectionResultListener.onConnectionResult(NETWORK_ERROR, null);
+            onResponseListener.onResponse(NETWORK_ERROR, null);
         }
     }
 
@@ -80,7 +79,7 @@ public class WeatherAPIManager {
     private void executeAPIConnectionAsyncTask(String endpointName, String endpointURL) {
 
         WeatherAPIConnectionAsyncTask weatherAPIConnectionAsyncTask = new WeatherAPIConnectionAsyncTask();
-        weatherAPIConnectionAsyncTask.setOnResponseListener(new WeatherAPIConnectionAsyncTaskOnResponseListener());
+        weatherAPIConnectionAsyncTask.setOnConnectionResultListener(new WeatherAPIConnectionAsyncTaskOnConnectionResultListener());
         weatherAPIConnectionAsyncTask.execute(endpointName, endpointURL);
     }
 
@@ -91,13 +90,9 @@ public class WeatherAPIManager {
 
         // Check if a network connection is available
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo networkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
 
-        if (networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        }
-
-        return false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     /**
@@ -106,19 +101,20 @@ public class WeatherAPIManager {
      *  Connect to an endpoint which receives the city name and sends a response with the
      *  information for the current weather.
      *  */
-    private class WeatherAPIConnectionAsyncTaskOnResponseListener implements WeatherAPIConnectionAsyncTask.OnResponseListener {
+    private class WeatherAPIConnectionAsyncTaskOnConnectionResultListener implements WeatherAPIConnectionAsyncTask.OnConnectionResultListener {
 
         @Override
-        public void onResponse(String endpointName, String status, String result) {
+        public void onConnectionResult(String endpointName, String status, String result) {
 
-            if (status.equals(RESULT_OK)) {
+            if (status.equals(RESPONSE_OK)) {
+
                 processWeatherEndpointResult(result);
 
-                onConnectionResultListener.onConnectionResult(status, currentWeatherDataModel);
+                onResponseListener.onResponse(status, currentWeatherDataModel);
 
             } else {
 
-                onConnectionResultListener.onConnectionResult(status, null);
+                onResponseListener.onResponse(status, null);
             }
         }
     }

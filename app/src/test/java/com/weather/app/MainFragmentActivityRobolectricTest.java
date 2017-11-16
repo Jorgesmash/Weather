@@ -157,16 +157,16 @@ public class MainFragmentActivityRobolectricTest {
                 System.out.println(mainFragmentActivity.getString(R.string.no_network_dialog_fragment_title));
                 System.out.println(mainFragmentActivity.getString(R.string.no_network_dialog_fragment_message));
 
-            } else if (status.equals(WeatherAPIManager.RESULT_TIMEOUT)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_TIMEOUT)) {
                 System.out.println(mainFragmentActivity.getString(R.string.result_timeout_dialog_fragment_title));
                 System.out.println(mainFragmentActivity.getString(R.string.result_timeout_dialog_fragment_message));
 
-            } else if (status.equals(WeatherAPIManager.RESULT_ERROR)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_ERROR)) {
                 System.out.println(mainFragmentActivity.getString(R.string.result_error_dialog_fragment_title));
                 System.out.println(mainFragmentActivity.getString(R.string.result_error_dialog_fragment_message));
 
 
-            } else if (status.equals(WeatherAPIManager.RESULT_OK)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_OK)) {
                 System.out.println("API call Successful");
                 System.out.println("City: " + currentWeatherDataModel.getCityString());
                 System.out.println("Conditions: " + currentWeatherDataModel.getSkyConditionsDescriptionString());

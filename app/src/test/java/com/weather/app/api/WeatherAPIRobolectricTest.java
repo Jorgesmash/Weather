@@ -34,7 +34,7 @@ public class WeatherAPIRobolectricTest {
     public void callAPICall_shouldRetrieveCurrentWeatherInformation(String cityName) {
 
         WeatherAPIManager weatherAPIManager = new WeatherAPIManager(activity);
-        weatherAPIManager.setOnConnectionResultListener(new WeatherAPIManagerOnConnectionResultListener());
+        weatherAPIManager.setOnResponseListener(new WeatherAPIManagerOnResponseListener());
         weatherAPIManager.connectToWeatherEndpoint(cityName);
     }
 
@@ -42,29 +42,29 @@ public class WeatherAPIRobolectricTest {
      * If there any error, this will be reported to user in a Dialog.
      * If a successful result is received, we'll populate both current weather a forecast sections
      * */
-    private class WeatherAPIManagerOnConnectionResultListener implements WeatherAPIManager.OnConnectionResultListener {
+    private class WeatherAPIManagerOnResponseListener implements WeatherAPIManager.OnResponseListener {
 
         @Override
-        public void onConnectionResult(String status, CurrentWeatherDataModel currentWeatherDataModel) {
+        public void onResponse(String status, CurrentWeatherDataModel currentWeatherDataModel) {
 
             if (status.equals(WeatherAPIManager.NETWORK_ERROR)) {
                 if (onConnectionResultListener != null) {
                     onConnectionResultListener.onConnectionResult(WeatherAPIManager.NETWORK_ERROR, null);
                 }
 
-            }  else if (status.equals(WeatherAPIManager.RESULT_TIMEOUT)) {
+            }  else if (status.equals(WeatherAPIManager.RESPONSE_TIMEOUT)) {
                 if (onConnectionResultListener != null) {
-                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESULT_TIMEOUT, null);
+                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_TIMEOUT, null);
                 }
 
-            } else if (status.equals(WeatherAPIManager.RESULT_ERROR)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_ERROR)) {
                 if (onConnectionResultListener != null) {
-                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESULT_ERROR, null);
+                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_ERROR, null);
                 }
 
-            } else if (status.equals(WeatherAPIManager.RESULT_OK)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_OK)) {
                 if (onConnectionResultListener != null) {
-                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESULT_OK, currentWeatherDataModel);
+                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_OK, currentWeatherDataModel);
                 }
             }
         }
