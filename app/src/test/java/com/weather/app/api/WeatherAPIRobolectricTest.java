@@ -57,9 +57,9 @@ public class WeatherAPIRobolectricTest {
                     onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_TIMEOUT, null);
                 }
 
-            } else if (status.equals(WeatherAPIManager.RESPONSE_ERROR)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_NOTFOUND)) {
                 if (onConnectionResultListener != null) {
-                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_ERROR, null);
+                    onConnectionResultListener.onConnectionResult(WeatherAPIManager.RESPONSE_NOTFOUND, null);
                 }
 
             } else if (status.equals(WeatherAPIManager.RESPONSE_OK)) {

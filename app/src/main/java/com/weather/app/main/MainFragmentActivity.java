@@ -110,7 +110,7 @@ public class MainFragmentActivity extends FragmentActivity {
      * Checks if user has already typed a city name and if true, creates a new API connection
      * to retrieve the current weather information for the next 7 days. Also sets an OnResponseListener
      * which will be called when the result of the API connection has finished retrieving
-     * the weather information
+     * the weather information.
      * */
     private void retrieveForecastInformation() {
 
@@ -130,26 +130,31 @@ public class MainFragmentActivity extends FragmentActivity {
         weatherAPIManager.connectToWeatherEndpoint(cityName);
     }
 
-    /** Listens if the API has finished retrieving the forecast informations.
+    /** Listens if the API has finished retrieving the forecast information.
      * If there any error, this will be reported to user in a Dialog.
-     * If a successful result is received, we'll populate both current weather a forecast sections
+     * If a successful result is received, we'll populate both current weather a forecast sections.
      * */
     private class WeatherAPIManagerOnResponseListener implements WeatherAPIManager.OnResponseListener {
 
         @Override
         public void onResponse(String status, CurrentWeatherDataModel currentWeatherDataModel) {
 
-            if (status.equals(WeatherAPIManager.NETWORK_ERROR)) {
-                showDialogFragment(getString(R.string.no_network_dialog_fragment_title), getString(R.string.no_network_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
+            switch (status) {
+                case WeatherAPIManager.NETWORK_ERROR:
+                    showDialogFragment(getString(R.string.no_network_dialog_fragment_title), getString(R.string.no_network_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
-            }  else if (status.equals(WeatherAPIManager.RESPONSE_TIMEOUT)) {
-                showDialogFragment(getString(R.string.result_timeout_dialog_fragment_title), getString(R.string.result_timeout_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
+                    break;
+                case WeatherAPIManager.RESPONSE_TIMEOUT:
+                    showDialogFragment(getString(R.string.result_timeout_dialog_fragment_title), getString(R.string.result_timeout_dialog_fragment_message), new RetryAPIConnectionDialogFragmentPositiveButtonOnClickListener());
 
-            } else if (status.equals(WeatherAPIManager.RESPONSE_NOTFOUND)) {
-                showDialogFragment(getString(R.string.result_error_dialog_fragment_title), getString(R.string.result_error_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
+                    break;
+                case WeatherAPIManager.RESPONSE_NOTFOUND:
+                    showDialogFragment(getString(R.string.result_error_dialog_fragment_title), getString(R.string.result_error_dialog_fragment_message), new RetrySettingsActivityDialogFragmentPositiveButtonOnClickListener());
 
-            } else if (status.equals(WeatherAPIManager.RESPONSE_OK)) {
-                populateCurrentWeatherView(currentWeatherDataModel);
+                    break;
+                case WeatherAPIManager.RESPONSE_OK:
+                    populateCurrentWeatherView(currentWeatherDataModel);
+                    break;
             }
         }
     }
@@ -165,7 +170,7 @@ public class MainFragmentActivity extends FragmentActivity {
         setUIElementsVisible(View.VISIBLE);
 
         // Select background color depending of the current temperature. If the temperature is below
-        // 60 °F, the application background will be blue (cold), otherwise will be orange (orange)
+        // 60 °F, the application background will be blue (cold), otherwise will be orange (orange).
         int color;
         int temperature = (int) Double.parseDouble(currentWeatherDataModel.getCurrentTemperatureFahrenheitString());
         if (temperature < 60) {
@@ -211,13 +216,13 @@ public class MainFragmentActivity extends FragmentActivity {
 
         // Populate pressure
         String pressureString = currentWeatherDataModel.getPressureString();
-        pressureTextView.setText(pressureString + " mmHg");
+        pressureTextView.setText(String.format("%s mmHg", pressureString));
 
         String windSpeedString = currentWeatherDataModel.getWindSpeedString();
-        windSpeedTextView.setText(windSpeedString + " m/h");
+        windSpeedTextView.setText(String.format("%s m/h", windSpeedString));
 
         String visibilityString = currentWeatherDataModel.getVisibilityString();
-        visibilityTextView.setText(visibilityString + " ft");
+        visibilityTextView.setText(String.format("%s ft", visibilityString));
     }
 
     /**
@@ -259,7 +264,7 @@ public class MainFragmentActivity extends FragmentActivity {
 
     /**
      * Called when the user presses the Settings button.
-     * It will open the settings activity
+     * It will open the settings activity.
      * */
     private class SettingsButtonOnClickListener implements View.OnClickListener {
 
@@ -270,7 +275,7 @@ public class MainFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * Start the Settings Activity
+     * Start the Settings Activity.
      * */
     private void startSettingsActivity() {
 
@@ -279,7 +284,7 @@ public class MainFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * Sets the visibility of the view's UI elements
+     * Sets the visibility of the view's UI elements.
      * */
     private void setUIElementsVisible(int visibility) {
 

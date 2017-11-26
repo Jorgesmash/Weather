@@ -26,16 +26,16 @@ public class WeatherAPIConnectionAsyncTask extends AsyncTask<String, Void, Strin
     private static final int CONNECTION_TIMEOUT = 15000;
 
     // Network status
-    public static final String NETWORK_OK = "NETWORK_OK";
-    public static final String NETWORK_TIMEOUT = "NETWORK_TIMEOUT";
-    public static final String NETWORK_NOTFOUND = "NETWORK_NOTFOUND";
+    static final String NETWORK_OK = "NETWORK_OK";
+    static final String NETWORK_TIMEOUT = "NETWORK_TIMEOUT";
+    static final String NETWORK_NOTFOUND = "NETWORK_NOTFOUND";
 
     /** Listener to let know when a response has been received */
     private OnConnectionResultListener onConnectionResultListener;
     public interface OnConnectionResultListener {
         void onConnectionResult(String endpointName, String status, String result);
     }
-    public void setOnConnectionResultListener(OnConnectionResultListener onConnectionResultListener) {
+    void setOnConnectionResultListener(OnConnectionResultListener onConnectionResultListener) {
         this.onConnectionResultListener = onConnectionResultListener;
     }
 

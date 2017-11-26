@@ -161,7 +161,7 @@ public class MainFragmentActivityRobolectricTest {
                 System.out.println(mainFragmentActivity.getString(R.string.result_timeout_dialog_fragment_title));
                 System.out.println(mainFragmentActivity.getString(R.string.result_timeout_dialog_fragment_message));
 
-            } else if (status.equals(WeatherAPIManager.RESPONSE_ERROR)) {
+            } else if (status.equals(WeatherAPIManager.RESPONSE_NOTFOUND)) {
                 System.out.println(mainFragmentActivity.getString(R.string.result_error_dialog_fragment_title));
                 System.out.println(mainFragmentActivity.getString(R.string.result_error_dialog_fragment_message));
 

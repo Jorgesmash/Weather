@@ -31,9 +31,6 @@ public class WeatherAPIManager {
 
     private Context context;
 
-    // Data Models
-    private CurrentWeatherDataModel currentWeatherDataModel;
-
     /**  Listener to inform that a result from the API connection has been gotten */
     private OnResponseListener onResponseListener;
     public interface OnResponseListener {
@@ -84,7 +81,7 @@ public class WeatherAPIManager {
     }
 
     /**
-     * Validates that the device is connected to network
+     * Validates that the device is connected to network.
      * */
     private boolean isNetworkConnected() {
 
@@ -108,7 +105,8 @@ public class WeatherAPIManager {
 
             if (status.equals(RESPONSE_OK)) {
 
-                processWeatherEndpointResult(result);
+                // Convert the JSON data into Model data
+                CurrentWeatherDataModel currentWeatherDataModel = processWeatherEndpointResult(result);
 
                 onResponseListener.onResponse(status, currentWeatherDataModel);
 
@@ -121,17 +119,17 @@ public class WeatherAPIManager {
 
     /**
      * Processing of the first connection endpoint response:
-     * Parses the result of the 'weather' endpoint call to get both the city and the state
+     * Parses the JSON result of the endpoint call to get the current weather information.
      */
-    private void processWeatherEndpointResult(String result) {
+    private CurrentWeatherDataModel processWeatherEndpointResult(String result) {
+
+        // The instance of the data model is created here, once we're sure that the web service
+        // has responded successful. Before this, it is not necessary to instance the data model
+        CurrentWeatherDataModel currentWeatherDataModel = new CurrentWeatherDataModel();
 
         try {
 
             JSONObject resultJSONObject = new JSONObject(result);
-
-            // The instance of the data model is created here, once we're sure that the web service
-            // has responded successful. Before this, it is not necessary to instance the data model
-            currentWeatherDataModel = new CurrentWeatherDataModel();
 
             // Take the city from JSON and set it in currentWeatherDataModel
             String cityString = resultJSONObject.getString("name");
@@ -207,5 +205,7 @@ public class WeatherAPIManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return currentWeatherDataModel;
     }
 }
